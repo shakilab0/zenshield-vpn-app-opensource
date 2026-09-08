@@ -6,6 +6,18 @@ on:
     branches: [main]
 
 jobs:
+  secret-scan:
+    # Audit Rule 9: every push/PR to a public repo gets scanned for
+    # committed secrets, full history included, not just the diff.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   analyze:
     runs-on: ubuntu-latest
     steps:
